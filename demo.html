@@ -1,0 +1,103 @@
+<!-- ZwglWLzwzrxEzz1nYI5uK5duvgthMK1L5nPqEuClHtcXF5qN-zdE5aNixS4X6jKkvjRggA. -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <style>
+        #chat-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#chat-display {
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+#chat-input input[type="text"] {
+    width: 80%;
+    padding: 5px;
+}
+
+#chat-input button {
+    padding: 5px 10px;
+}
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-display"></div>
+        <div id="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Get DOM elements
+const userInput = document.getElementById('user-input');
+const sendButton = document.getElementById('send-btn');
+const chatDisplay = document.getElementById('chat-display');
+
+// API base URL
+const apiUrl = 'ZwglWLzwzrxEzz1nYI5uK5duvgthMK1L5nPqEuClHtcXF5qN-zdE5aNixS4X6jKkvjRggA.';
+
+// Handle send button click
+sendButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    sendMessage();
+});
+
+// Handle user pressing Enter key
+userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Send user message and display response
+function sendMessage() {
+    const userMessage = userInput.value.trim();
+    if (userMessage === '') {
+        return;
+    }
+
+    displayMessage(userMessage, 'user');
+
+    // Send user message to Bard API
+    fetch(`${apiUrl}/chat`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: userMessage }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            const botMessage = data.messages[0].message;
+            displayMessage(botMessage, 'bot');
+        });
+
+    // Clear input field
+    userInput.value = '';
+}
+
+// Display messages in chat display
+function displayMessage(message, sender) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', sender);
+    messageElement.textContent = message;
+    chatDisplay.appendChild(messageElement);
+
+    // Scroll to bottom of chat display
+    chatDisplay.scrollTop = chatDisplay.scrollHeight;
+}
+    </script>
+</body>
+</html>
